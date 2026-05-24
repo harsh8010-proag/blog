@@ -41,7 +41,7 @@ const Navbar = () => {
 
                         {/* Logo */}
 
-                        <div className='flex gap-3 items-center cursor-pointer'>
+                        <div className='flex gap-3 items-center cursor-pointer' onClick={() => navigate('/')}>
 
                             <img
                                 src={logo}
@@ -141,7 +141,7 @@ const Navbar = () => {
 
 
 
-                    <div className='flex items-center gap-4 cursor-pointer group '>
+                    <div className='flex items-center gap-4 cursor-pointer group ' onClick={() => navigate('/')}>
 
                         <img
                             src={logo}

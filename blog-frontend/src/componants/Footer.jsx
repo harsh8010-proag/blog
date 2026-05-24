@@ -1,15 +1,16 @@
 import React from 'react'
 import logo from '../assets/logo.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Footer = () => {
+    const navigate = useNavigate()
     return (
         <div className='px-8 sm:px-10  lg:px-14 pt-24 '>
             <div className='flex flex-col gap-8 justify-center lg:flex-row lg:justify-between items-center pb-10  border-b border-gray-200'>
 
                 {/* Logo */}
 
-                <div className='flex gap-3 items-center cursor-pointer'>
+                <div className='flex gap-3 items-center cursor-pointer' onClick={() => navigate('/')}>
 
                     <img
                         src={logo}
