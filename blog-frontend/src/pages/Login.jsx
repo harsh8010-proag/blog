@@ -77,13 +77,13 @@ const Login = () => {
 
     return (
 
-        <div className='fixed inset-0 z-150 bg-black/50 backdrop-blur-sm flex items-center justify-center px-5'>
+        <div className='fixed inset-0 z-150 bg-black/50 backdrop-blur-sm flex items-center justify-center px-5 '>
 
             <div className='bg-white rounded-[30px] max-w-md w-full p-8 relative shadow-2xl'>
 
                 <button
                     onClick={handleClose}
-                    className='absolute right-6 top-6 text-xl'
+                    className='absolute right-6 top-6 text-xl cursor-pointer'
                 >
                     <i className="ri-close-fill"></i>
                 </button>
