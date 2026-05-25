@@ -144,7 +144,7 @@ const Home = () => {
 
                         </div>
 
-                        <div className=' col-span-3 lg:col-span-2 grid lg:grid-rows-2 gap-8  '>
+                        <div className=' col-span-3 lg:col-span-2 grid  gap-8  '>
                             <div className='group relative overflow-hidden rounded-2xl h-[300px] lg:h-auto w-full'>
 
                                 {/* Zoom Image */}
@@ -161,10 +161,10 @@ const Home = () => {
                                 </div>
 
                             </div>
-                            <div className='flex flex-col sm:flex-row sm:justify-between gap-8 w-full '>
+                            <div className='grid grid-cols-1  sm:grid-cols-2   gap-8 w-full '>
                                 <div className='group relative overflow-hidden rounded-2xl h-[300px] lg:h-auto w-full'>
 
-                                    {/* Zoom Image */}
+
                                     <div
                                         className='h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110'
                                         style={{ backgroundImage: `url(${sestwoimg3})` }}
@@ -180,11 +180,13 @@ const Home = () => {
                                 </div>
                                 <div className='group relative overflow-hidden rounded-2xl h-[300px] lg:h-auto w-full'>
 
-                                    {/* Zoom Image */}
+
                                     <div
                                         className='h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110'
                                         style={{ backgroundImage: `url(${sestwoimg4})` }}
-                                    ></div>
+                                    >
+
+                                    </div>
 
                                     {/* Content */}
                                     <div className='absolute inset-0 flex items-end'>

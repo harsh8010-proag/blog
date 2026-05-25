@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useRegisterMutation } from '../redux/services/api';
+import { useLazyLoginQuery, useRegisterMutation } from '../redux/services/api';
 
 
 const Register = () => {
@@ -19,9 +19,13 @@ const Register = () => {
         }
     ] = useRegisterMutation();
 
+    const [getUser] = useLazyLoginQuery();
+
+
     const handleClose = () => {
         navigate(location.state?.from || "/")
     }
+
 
     const handleSubmit = async (e) => {
 
@@ -29,6 +33,13 @@ const Register = () => {
 
         try {
 
+            const res = await getUser(email).unwrap()
+            if (res.length > 0) {
+
+                alert('user already exist');
+                return;
+            }
+            console.log(res);
 
             await register({
                 name,

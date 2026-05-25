@@ -10,6 +10,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ScrollToTop from './componants/ScrollToTop'
 import AddBlog from './componants/AddBlog'
+import BlogDital from './pages/BlogDital'
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={< Register />} />
         <Route path='/addblog' element={<AddBlog />} />
+        <Route path='/blog/:id' element={<BlogDital />} />
       </Routes>
       <Footer />
     </div>

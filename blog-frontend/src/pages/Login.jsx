@@ -18,7 +18,7 @@ const Login = () => {
         {
             isLoading
         }
-    ] = useLazyLoginQuery()
+    ] = useLazyLoginQuery();
 
     const handleClose = () => {
         navigate(location.state?.from || "/")
@@ -30,8 +30,7 @@ const Login = () => {
 
         try {
 
-            const res =
-                await getUser(email)
+            const res = await getUser(email);
 
             const user =
                 res.data?.[0]
@@ -48,7 +47,7 @@ const Login = () => {
                 user.password !== password
             ) {
 
-                alert("Wrong password")
+                alert("User not found")
 
                 return
 
@@ -105,6 +104,7 @@ const Login = () => {
                         type="email"
                         placeholder='Email'
                         value={email}
+                        required
                         onChange={(e) =>
                             setEmail(
                                 e.target.value
@@ -117,6 +117,7 @@ const Login = () => {
                         type="password"
                         placeholder='Password'
                         value={password}
+                        required
                         onChange={(e) =>
                             setPassword(
                                 e.target.value

@@ -14,6 +14,11 @@ export const api = createApi({
             providesTags: ['Blogs']
         }),
 
+        getBlogById: builder.query({
+            query: (id) => `blogs?id=${id}`
+        }),
+
+
         addBlog: builder.mutation({
 
             query: (data) => ({
@@ -33,12 +38,13 @@ export const api = createApi({
             invalidatesTags: ['Users']
         }),
 
+
         login: builder.query({
             query: (email) => `users?email=${email}`
         }),
 
         userBlog: builder.query({
-            query: (name) => `blogs?authorname=${name}`,
+            query: (email) => `blogs?user.email=${email}`,
             providesTags: ['Blogs']
         })
         ,
@@ -76,5 +82,6 @@ export const api = createApi({
     })
 })
 
-export const { useGetBlogsByNameQuery, useRegisterMutation, useAddBlogMutation, useLazyLoginQuery, useUserBlogQuery, useUpdateBlogMutation, useDeleteBlogMutation } = api;
+export const { useGetBlogsByNameQuery, useRegisterMutation, useAddBlogMutation, useLazyLoginQuery,
+    useUserBlogQuery, useUpdateBlogMutation, useDeleteBlogMutation, useGetBlogByIdQuery } = api;
 

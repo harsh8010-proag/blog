@@ -27,7 +27,7 @@ const AddBlog = () => {
     }
         =
         useUserBlogQuery(
-            user?.name,
+            user?.email,
             {
                 skip: !user
             }
@@ -127,8 +127,7 @@ const AddBlog = () => {
 
             const blogData = {
 
-                authorname:
-                    user?.name,
+                user: user,
 
                 title,
 
