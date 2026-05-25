@@ -127,7 +127,7 @@ const AddBlog = () => {
 
             const blogData = {
 
-                user: user,
+                user: user.id,
 
                 title,
 

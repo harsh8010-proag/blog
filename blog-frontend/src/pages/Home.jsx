@@ -35,7 +35,7 @@ const Home = () => {
 
 
     return (
-        <div className='relative min-h-screen w-full'>
+        <div className='relative min-h-screen w-full overflow-x-hidden'>
 
             <div className=" bg-cover bg-center min-h-screen  pt-48   lg:pt-76"
                 style={{ backgroundImage: `url(${herobg})` }}>
@@ -51,7 +51,7 @@ const Home = () => {
                             <div className='flex text-xl font-semibold p-4 items-center gap-4'><p className='lg:text-5xl  text-3xl font-bold'>4.9</p ><i className="ri-star-fill text-2xl text-lime-500 "></i><p>1,458 reviews</p></div>
                         </div>
                     </div>
-                    <div className='flex grid grid-cols-1 sm:grid-cols-2 flex justify-center lg:items-end gap-6'>
+                    <div className='  grid grid-cols-1 sm:grid-cols-2 flex justify-center lg:items-end gap-6'>
 
                         {/* IMAGE CARD */}
                         <div className='relative  '>
