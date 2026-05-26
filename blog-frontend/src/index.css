@@ -3,3 +3,7 @@
 /* @theme {
     --breakpoint-lg: 1000px;
 } */
+
+html {
+    scroll-behavior: smooth;
+}
