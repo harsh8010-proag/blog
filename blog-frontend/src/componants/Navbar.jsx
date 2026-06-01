@@ -3,36 +3,42 @@ import logo from '../assets/logo.png'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../redux/services/authSlice'
+import { useLazyLogoutQuery } from '../redux/services/api.js'
 
 const Navbar = () => {
 
-    const [showMenu, setShowMenu] = useState(false)
-
+    const [showMenu, setShowMenu] = useState(false);
     const location = useLocation()
+
+    const [logoutUser, { data }] = useLazyLogoutQuery()
     useEffect(() => {
 
-        setShowMenu(false)
+        setShowMenu(false);
 
     }, [location.pathname])
 
+    // useEffect(() => { }, [])
     const user = useSelector(state => state.auth.user)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const handleLogout = () => {
 
-        dispatch(
-            logout()
-        )
+    const handleLogout = async () => {
+
+        try {
+            const result = await logoutUser().unwrap(); // unwrap() to get raw data or throw error
+            dispatch(logout());
+            console.log('Logout successful:', result);
+        } catch (err) {
+            console.error('Logout failed:', err);
+        }
+
         navigate('/')
-        setShowMenu(false)
+        setShowMenu(false);
     }
 
     return (
         <>
-
-            {/* Navbar */}
-
             <div className='fixed top-12 left-0 w-full px-4 sm:px-8 lg:px-12 z-50'>
 
                 <div className='bg-white p-4 rounded-full shadow-[0_8px_20px_-8px_rgba(0,0,0,0.1)]'>
@@ -59,11 +65,11 @@ const Navbar = () => {
 
                         <div className='hidden lg:flex gap-12 text-sm font-bold'>
 
-                            <Link to='/' className='hover:text-lime-500 transition-all duration-300'>HOME</Link>
-                            <Link to='/about' className='hover:text-lime-500 transition-all duration-300'>ABOUT</Link>
+                            <Link to='/' onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className='hover:text-lime-500 transition-all duration-300'>HOME</Link>
+                            <Link to='/about' onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className='hover:text-lime-500 transition-all duration-300'>ABOUT</Link>
 
-                            <Link to='/blog' className='hover:text-lime-500 transition-all duration-300'>BLOG</Link>
-                            <Link to='/contact' className='hover:text-lime-500 transition-all duration-300'>CONTACT</Link>
+                            <Link to='/blog' onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className='hover:text-lime-500 transition-all duration-300'>BLOG</Link>
+                            <Link to='/contact' onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className='hover:text-lime-500 transition-all duration-300'>CONTACT</Link>
 
                         </div>
 
@@ -121,13 +127,11 @@ const Navbar = () => {
                 <div
                     className={`fixed top-12 left-4 right-4 bottom-5 bg-[#02150F] z-[100] p-7 rounded-2xl
     transition-all duration-500 ease-in-out
-    ${showMenu
+                       ${showMenu
                             ? "opacity-100 translate-y-0 scale-100"
                             : "opacity-0 -translate-y-10 scale-95 pointer-events-none"
                         }`}
                 >
-
-
 
                     <div className='flex justify-end'>
 
@@ -159,11 +163,11 @@ const Navbar = () => {
 
                     <div className='flex flex-col gap-4 mt-8  text-white text-xl font-bold transition-all duration-300'>
 
-                        <Link to='/' onClick={() => setShowMenu(false)} className='hover:text-lime-500 transition-all duration-300'>Home</Link>
+                        <Link to='/' onClick={() => { setShowMenu(false); window.scrollTo({ top: 0, behavior: "smooth" }) }} className='hover:text-lime-500 transition-all duration-300'>Home</Link>
 
-                        <Link to='/about' onClick={() => setShowMenu(false)} className='hover:text-lime-500 transition-all duration-300'>About</Link>
-                        <Link to='/blog' onClick={() => setShowMenu(false)} className='hover:text-lime-500 transition-all duration-300'>Blog</Link>
-                        <Link to='/contact' onClick={() => setShowMenu(false)} className='hover:text-lime-500 transition-all duration-300'>Contact</Link>
+                        <Link to='/about' onClick={() => { setShowMenu(false); window.scrollTo({ top: 0, behavior: "smooth" }) }} className='hover:text-lime-500 transition-all duration-300'>About</Link>
+                        <Link to='/blog' onClick={() => { setShowMenu(false); window.scrollTo({ top: 0, behavior: "smooth" }) }} className='hover:text-lime-500 transition-all duration-300'>Blog</Link>
+                        <Link to='/contact' onClick={() => { setShowMenu(false); window.scrollTo({ top: 0, behavior: "smooth" }) }} className='hover:text-lime-500 transition-all duration-300'>Contact</Link>
 
                     </div>
 
@@ -232,4 +236,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar
+export default Navbar;

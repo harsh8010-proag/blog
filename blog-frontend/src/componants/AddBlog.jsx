@@ -1,172 +1,71 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import addbloghero from '../assets/about-us-bottom-cta-background-3.webp'
-import {
-    useAddBlogMutation,
-    useDeleteBlogMutation,
-    useUpdateBlogMutation,
-    useUserBlogQuery
-} from '../redux/services/api'
+import addbloghero from '../assets/about-us-bottom-cta-background-3.webp';
+
+
 import BlogCard from './BlogCard'
+import { useAddBlogMutation, useGetBlogQuery, useGetUserBlogQuery } from '../redux/services/blogapi.js';
+import { useRef } from 'react';
+
 
 const AddBlog = () => {
 
-    const [title, setTitle] = useState("")
-    const [description, setDescription] = useState("")
-    const [image, setImage] = useState("")
-    const [editingBlog, setEditingBlog] = useState(null)
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [imageFile, setImageFile] = useState(null);
+    const [editingBlog, setEditingBlog] = useState(null);
 
-    const user =
-        useSelector(
-            state => state.auth.user
-        )
+    const fileInputRef = useRef(null);
+
+    const [addBlog, { isLoading: isAddingBlog }] = useAddBlogMutation();
+
 
     const {
         data,
-        isLoading: isFetchingBlogs
-    }
-        =
-        useUserBlogQuery(
-            user?.email,
-            {
-                skip: !user
-            }
-        )
+        isLoading: isFetchingBlogs,
+        isError,
+        error
+    } = useGetUserBlogQuery();
+    console.log(data);
 
-    const [
-        addBlog,
-        {
-            isLoading: isAddingBlog
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+
+        const formData = new FormData();
+
+        formData.append(
+            "title",
+            title
+        );
+
+        formData.append(
+            "description",
+            description
+        );
+
+        formData.append(
+            "postImage",
+            imageFile
+        );
+
+        try {
+            const res = await addBlog(
+                formData
+            ).unwrap();
+
+            setTitle("");
+            setDescription("");
+            setImageFile(null);
+
+        } catch (error) {
+
+            console.log(error);
+
         }
-    ]
-        =
-        useAddBlogMutation()
-
-    const [
-        updateBlog,
-        {
-            isLoading: isUpdatingBlog
-        }
-    ]
-        =
-        useUpdateBlogMutation()
-
-    const [
-        deleteBlog,
-        {
-            isLoading: isDeletingBlog
-        }
-    ]
-        =
-        useDeleteBlogMutation()
-
-    const resetForm = () => {
-
-        setTitle("")
-        setDescription("")
-        setImage("")
-        setEditingBlog(null)
 
     }
 
-    const handleEdit = (blog) => {
-
-        setEditingBlog(blog)
-
-        setTitle(
-            blog.title
-        )
-
-        setDescription(
-            blog.description
-        )
-
-        setImage(
-            blog.image
-        )
-
-    }
-
-    const handleDelete =
-        async (id) => {
-
-            try {
-
-                await deleteBlog(
-                    id
-                ).unwrap()
-
-            } catch (error) {
-
-                console.log(error)
-
-            }
-
-        }
-
-    const handleSubmit =
-        async (e) => {
-
-            e.preventDefault()
-
-            if (
-                !title.trim()
-                ||
-                !description.trim()
-                ||
-                !image.trim()
-            ) {
-
-                alert(
-                    "All fields required"
-                )
-
-                return
-
-            }
-
-            const blogData = {
-
-                user: user.id,
-
-                title,
-
-                description,
-
-                image
-
-            }
-
-            try {
-
-                if (
-                    editingBlog
-                ) {
-
-                    await updateBlog({
-
-                        id: editingBlog.id,
-                        ...blogData
-
-                    }).unwrap()
-
-                } else {
-
-                    await addBlog(
-                        blogData
-                    ).unwrap()
-
-                }
-
-                resetForm()
-
-            } catch (error) {
-
-                console.log(error)
-
-            }
-
-        }
 
     return (
 
@@ -184,13 +83,9 @@ const AddBlog = () => {
 
                     <h1 className='text-4xl sm:text-5xl font-bold'>
 
-                        {
-                            editingBlog
-                                ?
-                                "Edit Blog"
-                                :
-                                "Create New Blog"
-                        }
+
+                        "Create New Blog"
+
 
                     </h1>
 
@@ -215,11 +110,11 @@ const AddBlog = () => {
                     </p>
 
                     <BlogCard
-                        data={data}
+                        data={data || []}
                         isLoading={isFetchingBlogs}
                         isUser
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
+                    // onEdit={handleEdit}
+                    // onDelete={handleDelete}
                     />
 
                 </div>
@@ -231,46 +126,48 @@ const AddBlog = () => {
                         className='space-y-4'
                     >
 
-                        <div className='h-[200px] rounded-[30px] overflow-hidden bg-[#F6FAF2]'>
+                        <div
+                            onClick={() => fileInputRef.current.click()}
+                            className='h-[200px] rounded-[30px] overflow-hidden bg-[#F6FAF2] cursor-pointer '>
 
-                            {
-                                image
-                                    ?
-
+                            {imageFile ? (
+                                <div className='relative h-full w-full'>
                                     <img
-                                        src={image}
+                                        src={URL.createObjectURL(imageFile)}
                                         alt=""
-                                        className='h-full w-full object-cover'
+                                        className='h-full w-full object-cover object-center'
                                     />
+                                    <div className='absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition flex justify-center items-center'>
 
-                                    :
-
-                                    <div className='h-full flex flex-col justify-center items-center text-gray-400'>
-
-                                        <i className="ri-image-add-line text-5xl"></i>
-
-                                        <p>
-
-                                            Blog Cover Preview
-
+                                        <p className='text-white font-semibold'>
+                                            Change Image
                                         </p>
 
                                     </div>
+                                </div>
 
-                            }
+                            ) : (
+                                <div
+
+                                    className='h-full flex flex-col justify-center items-center text-gray-400 '>
+                                    <i className="ri-image-add-line text-5xl"></i>
+                                    <p>upload image</p>
+                                </div>
+                            )}
 
                         </div>
 
                         <input
-                            type='text'
-                            value={image}
-                            placeholder='Paste image url'
+                            type='file'
+                            accept='image/*'
+                            hidden
+                            ref={fileInputRef}
                             onChange={(e) =>
-                                setImage(
-                                    e.target.value
+                                setImageFile(
+                                    e.target.files[0]
                                 )
                             }
-                            className='w-full rounded-full border-2 border-lime-100 px-7 py-3 outline-none focus:border-lime-500'
+                        // className='w-full rounded-full border-2 border-lime-100 px-7 py-3 outline-none focus:border-lime-500'
                         />
 
                         <input
@@ -299,11 +196,11 @@ const AddBlog = () => {
 
                         <button
                             type='submit'
-                            disabled={
-                                isAddingBlog
-                                ||
-                                isUpdatingBlog
-                            }
+                            // disabled={
+                            //     // isAddingBlog
+                            //     ||
+                            //     // isUpdatingBlog
+                            // }
                             className='w-full bg-lime-600 hover:bg-lime-700 text-white py-3 rounded-full cursor-pointer'
                         >
 
@@ -340,11 +237,11 @@ const AddBlog = () => {
                 <div className='col-span-3 lg:hidden'>
 
                     <BlogCard
-                        data={data}
+                        data={data || []}
                         isLoading={isFetchingBlogs}
                         isUser
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
+                    // onEdit={handleEdit}
+                    // onDelete={handleDelete}
                     />
 
                 </div>
@@ -358,3 +255,6 @@ const AddBlog = () => {
 }
 
 export default AddBlog
+
+
+

@@ -11,14 +11,15 @@ import Register from './pages/Register'
 import ScrollToTop from './componants/ScrollToTop'
 import AddBlog from './componants/AddBlog'
 import BlogDital from './pages/BlogDital'
+import Spinner from './componants/Spinner.jsx'
+import ProtectedRoute from './routes/ProtectedRoute.jsx'
 
 const App = () => {
   return (
     <div>
-
-
       <ScrollToTop />
       <Navbar />
+
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
@@ -26,8 +27,12 @@ const App = () => {
         <Route path='/blog' element={<Blog />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={< Register />} />
-        <Route path='/addblog' element={<AddBlog />} />
+
         <Route path='/blog/:id' element={<BlogDital />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path='/addblog' element={<AddBlog />} />
+        </Route>
       </Routes>
       <Footer />
     </div>

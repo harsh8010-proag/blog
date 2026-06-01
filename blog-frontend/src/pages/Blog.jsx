@@ -2,17 +2,24 @@ import React, { useState } from 'react'
 import bloghero from '../assets/blog-hero-image-768x361.webp'
 import BlogCard from '../componants/BlogCard';
 import Pagination from '../componants/Pagination';
-import { useGetBlogsByNameQuery } from '../redux/services/api';
+import {   useGetBlogQuery } from '../redux/services/blogapi.js';
 
 
 
 
 const Blog = () => {
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState(1);
+
+        const {
+        data,
+        isLoading ,
+        isError,
+        error
+    } = useGetBlogQuery();  
 
     const limit = 5;
 
-    const { data, error, isLoading } = useGetBlogsByNameQuery();
+ 
 
     return (
         <div>
@@ -24,7 +31,7 @@ const Blog = () => {
             </div>
 
             <div className='px-8 sm:px-10  lg:px-14'>
-                <BlogCard data={data} isLoading={isLoading} isUser={false} />
+                <BlogCard data={data?.blogs} isLoading={isLoading} isUser={false} />
                 {/* <Pagination page={page} setPage={setPage} /> */}
             </div>
 

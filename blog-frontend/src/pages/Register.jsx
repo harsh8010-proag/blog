@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useLazyLoginQuery, useRegisterMutation } from '../redux/services/api';
+import { useRegisterMutation } from '../redux/services/api';
 
 
 const Register = () => {
@@ -11,6 +11,11 @@ const Register = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState('');
+
+    const [isNameError, setIsNameError] = useState('');
+    const [isEmailError, setIsEmailError] = useState('');
+    const [isPasswordError, setIsPasswordError] = useState('');
 
     const [
         register,
@@ -19,7 +24,7 @@ const Register = () => {
         }
     ] = useRegisterMutation();
 
-    const [getUser] = useLazyLoginQuery();
+
 
 
     const handleClose = () => {
@@ -31,21 +36,35 @@ const Register = () => {
 
         e.preventDefault()
 
+        if (!name.trim()) {
+            setIsNameError('name is required');
+            return;
+        }
+
+        if (!email.trim()) {
+            setIsEmailError('email is required');
+            return;
+        }
+
+        if (!password.trim()) {
+            setIsPasswordError('password is required');
+            return;
+        }
+
+        if (password.length < 6) {
+
+            setIsPasswordError('password must at least 6 characters long ')
+            return;
+        }
         try {
 
-            const res = await getUser(email).unwrap()
-            if (res.length > 0) {
-
-                alert('user already exist');
-                return;
-            }
-            console.log(res);
-
-            await register({
+            const user = await register({
                 name,
                 email,
                 password
-            }).unwrap()
+            }).unwrap();
+
+            console.log(user)
 
             setName("")
             setEmail("")
@@ -55,10 +74,8 @@ const Register = () => {
 
         } catch (error) {
 
-            console.log(error);
-
-            alert("Registration Failed")
-
+            setIsEmailError(error.data.message)
+            console.log(error.data.message);
         }
 
     }
@@ -88,39 +105,54 @@ const Register = () => {
                     onSubmit={handleSubmit}
                     className='mt-10 space-y-5'
                 >
+                    <div>
+                        <input
+                            type="text"
+                            placeholder='Full Name'
+                            value={name}
+                            onChange={(e) => {
+                                setName(e.target.value)
+                                setIsNameError('')
+                            }
+                            }
+                            className={`w-full border-2  rounded-full px-6 py-4 outline-none focus:border-[#6AA600] transition-all duration-300 ${isNameError ? 'border-red-500 ' : 'border-gray-400'}`}
 
-                    <input
-                        type="text"
-                        placeholder='Full Name'
-                        value={name}
-                        onChange={(e) =>
-                            setName(e.target.value)
-                        }
-                        className='w-full border-2 border-gray-400 rounded-full px-6 py-4 outline-none focus:border-[#6AA600]'
-                        required
-                    />
+                        />
+                        {isNameError && <p className='text-sm text-red-500 ml-5 transition-all duration-300 opacity-100 translate-y-0'>{isNameError}</p>}
 
-                    <input
-                        type="email"
-                        placeholder='Email'
-                        value={email}
-                        onChange={(e) =>
-                            setEmail(e.target.value)
-                        }
-                        className='w-full border-2 border-gray-400 border rounded-full px-6 py-4 outline-none focus:border-[#6AA600]'
-                        required
-                    />
+                    </div>
 
-                    <input
-                        type="password"
-                        placeholder='Password'
-                        value={password}
-                        onChange={(e) =>
-                            setPassword(e.target.value)
-                        }
-                        className='w-full border-2 border-gray-400 rounded-full px-6 py-4 outline-none focus:border-[#6AA600]'
-                        required
-                    />
+                    <div>
+                        <input
+                            type="email"
+                            placeholder='Email'
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value)
+                                setIsEmailError('')
+                            }
+                            }
+                            className={`w-full border-2   border rounded-full px-6 py-4 outline-none focus:border-[#6AA600] ${isEmailError ? 'border-red-500' : 'border-gray-400'}`}
+
+                        />
+                        {isEmailError && <p className='text-sm text-red-500 ml-5'>{isEmailError}</p>}
+                    </div>
+                    <div>
+                        <input
+                            type="password"
+                            placeholder='Password'
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value)
+                                setIsPasswordError('')
+                            }
+                            }
+                            className={`w-full border-2  rounded-full px-6 py-4 outline-none focus:border-[#6AA600] ${isPasswordError ? 'border-red-500' : 'border-gray-400'}`}
+
+                        />
+                        {isPasswordError && <p className='text-sm text-red-500 ml-5'>{isPasswordError}</p>}
+                        {/* {error && <p className='text-sm text-red-500 ml-5'>{error}</p>} */}
+                    </div>
 
                     <button
                         type='submit'

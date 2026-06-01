@@ -2,6 +2,7 @@ import React from 'react'
 import contacthero from '../assets/formar/contact-us-hero-image.webp'
 import ses21 from '../assets/formar/contact-us-column-image.webp'
 import ses31 from '../assets/formar/contact-page-cta-background-image.webp'
+import ContactForm from '../componants/ContactForm.jsx'
 
 const Contact = () => {
     return (
@@ -62,33 +63,7 @@ const Contact = () => {
                             </div>
                         </div>
                     </div>
-                    <form className='bg-gray-100 p-6 rounded-2xl grid items-center'>
-                        <p className='text-xl sm:text-2xl font-bold '> Our Team is Always Here for Support and Assistance</p>
-                        <div className='grid sm:grid-cols-2 grid-cols-1  grid-cols-1  gap-4 mt-8 '>
-                            <div>
-                                <p className='text-lg text-gray-700 mb-2 '>Your Name</p>
-                                <input type="text" className='w-full text-lg p-2 px-3 rounded-full border-2 border-gray-300  focus:border-lime-500 outline-none' />
-                            </div>
-                            <div>
-                                <p className='text-lg text-gray-700 mb-2 '>Email Adress</p>
-                                <input type="text" className='w-full text-lg p-2 px-3 rounded-full border-2 border-gray-300  focus:border-lime-500 outline-none' />
-                            </div>
-                            <div>
-                                <p className='text-lg text-gray-700 mb-2 '>Phone Number</p>
-                                <input type="text" className=' w-full text-lg p-2 px-3 rounded-full border-2 border-gray-300  focus:border-lime-500 outline-none' />
-                            </div>
-                            <div>
-                                <p className='text-lg text-gray-700 mb-2 '>Company Name</p>
-                                <input type="text" className='w-full text-lg p-2 px-3 rounded-full border-2 border-gray-300  focus:border-lime-500 outline-none' />
-                            </div>
-
-                            <div className='sm:col-span-2'>
-                                <p className='mt-2 text-lg text-gray-700 mb-2'>Your Message</p>
-                                <textarea rows={5} className='w-full resize-none text-lg p-2 px-3 rounded-2xl outline-none border-2 border-gray-300 focus:border-lime-500'></textarea>
-                            </div>
-                        </div>
-
-                    </form>
+                    <div><ContactForm /></div>
                 </div>
 
             </div>

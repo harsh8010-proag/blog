@@ -28,12 +28,12 @@ const Footer = () => {
 
                 <div className='flex  flex-wrap justify-center  gap-12 text-sm font-bold '>
 
-                    <Link to='/' className='hover:text-lime-500 transition-all duration-300'>HOME</Link>
-                    <Link to='/about' className='hover:text-lime-500 transition-all duration-300'>ABOUT</Link>
+                    <Link to='/' onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className='hover:text-lime-500 transition-all duration-300'>HOME</Link>
+                    <Link to='/about' onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className='hover:text-lime-500 transition-all duration-300'>ABOUT</Link>
 
-                    <Link to='/blog' className='hover:text-lime-500 transition-all duration-300'>BLOG</Link>
-                    <Link to='/login' className='hover:text-lime-500 transition-all duration-300'>LOGIN</Link>
-                    <Link to='/register' className='hover:text-lime-500 transition-all duration-300'>REGISTER</Link>
+                    <Link to='/blog' onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className='hover:text-lime-500 transition-all duration-300'>BLOG</Link>
+                    <Link to='/login' onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className='hover:text-lime-500 transition-all duration-300'>LOGIN</Link>
+                    <Link to='/register' onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className='hover:text-lime-500 transition-all duration-300'>REGISTER</Link>
 
 
                 </div ></div>

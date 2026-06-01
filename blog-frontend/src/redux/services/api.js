@@ -1,37 +1,29 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+
 export const api = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${import.meta.env.VITE_BASE_URL}`
+        baseUrl: `${import.meta.env.VITE_BASE_URL}/users`,
+        credentials: "include"
     }),
 
-    tagTypes: ['Blogs', 'Users'],
+    tagTypes: ['Users'],
+
+
     endpoints: (builder) => ({
 
-        getBlogsByName: builder.query({
-            query: () => `blogs`,
-            providesTags: ['Blogs']
+        getProfile: builder.query({
+            query: () => `/profile`
         }),
 
-        getBlogById: builder.query({
-            query: (id) => `blogs?id=${id}`
-        }),
-
-
-        addBlog: builder.mutation({
-
-            query: (data) => ({
-                url: 'blogs',
-                method: 'POST',
-                body: data
-            }),
-            invalidatesTags: ['Blogs']
+        logout: builder.query({
+            query: () => `/logout`
         }),
 
         register: builder.mutation({
             query: (data) => ({
-                url: 'users',
+                url: '/register',
                 method: 'POST',
                 body: data
             }),
@@ -39,49 +31,16 @@ export const api = createApi({
         }),
 
 
-        login: builder.query({
-            query: (email) => `users?email=${email}`
-        }),
-
-        userBlog: builder.query({
-            query: (email) => `blogs?user.email=${email}`,
-            providesTags: ['Blogs']
-        })
-        ,
-        updateBlog: builder.mutation({
-
-            query: ({ id, ...blog }) => ({
-
-                url: `blogs/${id}`,
-
-                method: "PATCH",
-
-                body: blog
-
-            }),
-
-            invalidatesTags: ["Blogs"]
-
-        }),
-
-
-        deleteBlog: builder.mutation({
-
-            query: (id) => ({
-
-                url: `blogs/${id}`,
-
-                method: "DELETE"
-
-            }),
-
-            invalidatesTags: ["Blogs"]
-
+        login: builder.mutation({
+            query: (data) => ({
+                url: '/login',
+                method: 'POST',
+                body: data
+            })
         }),
 
     })
 })
 
-export const { useGetBlogsByNameQuery, useRegisterMutation, useAddBlogMutation, useLazyLoginQuery,
-    useUserBlogQuery, useUpdateBlogMutation, useDeleteBlogMutation, useGetBlogByIdQuery } = api;
+export const { useRegisterMutation, useLoginMutation, useGetProfileQuery, useLazyLogoutQuery } = api;
 

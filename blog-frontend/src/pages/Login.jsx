@@ -1,24 +1,29 @@
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useLazyLoginQuery } from '../redux/services/api'
+// import { useLazyLoginQuery } from '../redux/services/api'
 import { useDispatch } from 'react-redux'
 import { loginSuccess } from '../redux/services/authSlice'
+import { useLoginMutation } from '../redux/services/api.js'
 
 const Login = () => {
 
-    const navigate = useNavigate()
-    const location = useLocation()
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [isEmailError, setIsEmailError] = useState('');
+    const [isPasswordError, setIsPasswordError] = useState('');
+
     const dispatch = useDispatch();
 
     const [
-        getUser,
+        loginUser,
         {
-            isLoading
+            isLoading,
         }
-    ] = useLazyLoginQuery();
+    ] = useLoginMutation();
 
     const handleClose = () => {
         navigate(location.state?.from || "/")
@@ -26,49 +31,31 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
 
-        e.preventDefault()
-
-        try {
-
-            const res = await getUser(email);
-
-            const user =
-                res.data?.[0]
-
-            if (!user) {
-
-                alert("User not found")
-
-                return
-
-            }
-
-            if (
-                user.password !== password
-            ) {
-
-                alert("User not found")
-
-                return
-
-            }
-
-
-            dispatch(
-                loginSuccess(
-                    user
-                )
-            )
-
-            navigate("/")
-
+        e.preventDefault();
+        if (!email.trim()) {
+            setIsEmailError('email is required');
+            return;
         }
 
+        if (!password.trim()) {
+            setIsPasswordError('password is required');
+            return;
+        }
+
+        if (password.length < 6) {
+
+            setIsPasswordError('password must at least 6 characters long ')
+            return;
+        }
+        try {
+            const data = await loginUser({ email, password }).unwrap();
+
+            dispatch(loginSuccess(data.user))
+            navigate("/")
+        }
         catch (error) {
-
             console.log(error)
-
-            alert("Login Failed")
+            setError(error.data.message)
 
         }
 
@@ -99,32 +86,40 @@ const Login = () => {
                     onSubmit={handleSubmit}
                     className='mt-10 space-y-5'
                 >
+                    <div>
+                        <input
+                            type="email"
+                            placeholder='Email'
+                            value={email}
 
-                    <input
-                        type="email"
-                        placeholder='Email'
-                        value={email}
-                        required
-                        onChange={(e) =>
-                            setEmail(
-                                e.target.value
-                            )
-                        }
-                        className='w-full border-2 border-gray-400 rounded-full px-6 py-4 outline-none focus:border-[#6AA600]'
-                    />
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setIsEmailError('')
+                                setError('')
+                            }
+                            }
+                            className={`w-full border-2  rounded-full px-6 py-4 outline-none focus:border-[#6AA600] ${isEmailError ? 'border-red-500' : 'border-gray-400'}`}
+                        />
+                        {isEmailError && <p className='text-sm text-red-500 ml-5'>{isEmailError}</p>}
+                    </div>
 
-                    <input
-                        type="password"
-                        placeholder='Password'
-                        value={password}
-                        required
-                        onChange={(e) =>
-                            setPassword(
-                                e.target.value
-                            )
-                        }
-                        className='w-full border-2 border-gray-400 rounded-full px-6 py-4 outline-none focus:border-[#6AA600]'
-                    />
+                    <div>
+                        <input
+                            type="password"
+                            placeholder='Password'
+                            value={password}
+
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setIsPasswordError('');
+                                setError('');
+                            }
+                            }
+                            className={`w-full border-2  rounded-full px-6 py-4 outline-none focus:border-[#6AA600] ${isPasswordError ? 'border-red-500' : 'border-gray-400'}`}
+                        />
+                        {isPasswordError && <p className='text-sm text-red-500 ml-5'>{isPasswordError}</p>}
+                    </div>
+                    {error && <p className='text-sm text-red-500 ml-2'>{error}</p>}
 
                     <button
                         type='submit'
@@ -158,7 +153,7 @@ const Login = () => {
 
             </div>
 
-        </div>
+        </div >
 
     )
 }

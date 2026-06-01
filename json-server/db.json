@@ -49,6 +49,20 @@
       "description": "A city is a large, densely populated human settlement characterized by administratively defined boundaries, extensive infrastructure (such as transportation and utility networks), and a concentration of non-agricultural economic activity",
       "image": "https://images.unsplash.com/photo-1779464433263-35e2c02d1cc8?q=80&w=1228&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "id": 3
+    },
+    {
+      "user": "xJJRJk6PtSs",
+      "title": "snake",
+      "description": "this snake is wild snake",
+      "image": "https://th.bing.com/th?id=ORMS.57b206f18d1bcdf831b281b96af46395&pid=Wdp&w=612&h=304&qlt=90&c=1&rs=1&dpr=1.5&p=0",
+      "id": 4
+    },
+    {
+      "user": "xJJRJk6PtSs",
+      "title": "snake",
+      "description": "look like snake",
+      "image": "https://th.bing.com/th?id=ORMS.57b206f18d1bcdf831b281b96af46395&pid=Wdp&w=612&h=304&qlt=90&c=1&rs=1&dpr=1.5&p=0",
+      "id": 5
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
