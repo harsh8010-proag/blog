@@ -30,10 +30,11 @@ import sesseven1 from '../assets/home-subscribe-image-1.webp'
 import sesseven2 from '../assets/home-subscribe-image-2.webp'
 import sesseven3 from '../assets/home-subscribe-image-3.webp'
 import ses8 from '../assets/home-bottom-cta-background-image.webp'
+import { useNavigate } from 'react-router-dom'
 const Home = () => {
     const star = ['', '', '', '', '']
 
-
+    const navigate = useNavigate()
     return (
         <div className='relative min-h-screen w-full overflow-x-hidden'>
 
@@ -45,7 +46,7 @@ const Home = () => {
                         <h2 className='lg:text-7xl lg:text-start sm:text-5xl text-4xl text-center font-bold leading-tight'>Sustainable Farming for a Thriving Future</h2>
                         <p className='text-lg text-center lg:text-start font-medium mt-8 leading-normal'>We empower farmers with sustainable practices, quality seeds, and modern technologies to cultivate abundant harvests, support communities, protect resources, and ensure global food security.</p>
                         <div className='mt-14 flex items-center justify-center lg:justify-start flex-wrap '>
-                            <div className='bg-lime-600 hover:bg-lime-700 cursor-pointer text-white   flex items-center gap-6 rounded-full p-3 px-4'><p className='text-bold font-semibold text-md'>Explore Solution</p>
+                            <div onClick={() => navigate('/addblog')} className='bg-lime-600 hover:bg-lime-700 cursor-pointer text-white   flex items-center gap-6 rounded-full p-3 px-4'><p className='text-bold font-semibold text-md'>Explore Solution</p>
                                 <p className='bg-white p-2 rounded-full text-green-700 h-8 w-8 flex items-center justify-center'><i class="ri-arrow-right-line"></i></p>
                             </div>
                             <div className='flex text-xl font-semibold p-4 items-center gap-4'><p className='lg:text-5xl  text-3xl font-bold'>4.9</p ><i className="ri-star-fill text-2xl text-lime-500 "></i><p>1,458 reviews</p></div>

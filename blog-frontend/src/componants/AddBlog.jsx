@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux'
 import addbloghero from '../assets/about-us-bottom-cta-background-3.webp';
 
 
-import BlogCard from './BlogCard'
-import { useAddBlogMutation, useGetBlogQuery, useGetUserBlogQuery } from '../redux/services/blogapi.js';
+import BlogCard from './BlogCard';
+import { useAddBlogMutation, useDeleteBlogMutation, useGetBlogQuery, useGetUserBlogQuery, useUpdateblogMutation } from '../redux/services/blogapi.js';
 import { useRef } from 'react';
 
 
@@ -13,11 +13,15 @@ const AddBlog = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
-    const [editingBlog, setEditingBlog] = useState(null);
-
+    const [editingId, setEditingId] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [editImage, setEditImage] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
     const fileInputRef = useRef(null);
 
     const [addBlog, { isLoading: isAddingBlog }] = useAddBlogMutation();
+    const [update, { isLoading: isUpdatingBlog }] = useUpdateblogMutation();
+    const [deleteBlog, { isLoading: isDeleting }] = useDeleteBlogMutation();
 
 
     const {
@@ -26,18 +30,51 @@ const AddBlog = () => {
         isError,
         error
     } = useGetUserBlogQuery();
-    console.log(data);
+
+    const handleDelete = async (id) => {
+        await deleteBlog(id);
+
+        setTitle("");
+        setDescription("");
+        setImageFile(null);
+        setEditImage('')
+    }
+
+    const handleEdit = (blog) => {
+
+        setTitle(blog.title);
+        setDescription(blog.description);
+        setEditingId(blog._id);
+        setImageFile(null);
+        setEditImage(blog.postImage);
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
+        if (!title.trim() || !description.trim()) {
+            return setErrorMessage('all feilds are required')
+        }
 
+        if (!editingId && !imageFile) {
+            return setErrorMessage('Post image are requierd')
+        }
         const formData = new FormData();
 
         formData.append(
             "title",
             title
         );
+
+        formData.append(
+            'postImageUrl',
+            editImage
+        )
 
         formData.append(
             "description",
@@ -50,27 +87,39 @@ const AddBlog = () => {
         );
 
         try {
-            const res = await addBlog(
-                formData
-            ).unwrap();
 
+            if (editingId) {
+                await update({ id: editingId, data: formData });
+
+            } else {
+                const res = await addBlog(
+                    formData
+                ).unwrap();
+
+
+            }
             setTitle("");
             setDescription("");
             setImageFile(null);
-
+            setEditImage('')
         } catch (error) {
-
             console.log(error);
-
         }
-
     }
 
+    useEffect(() => {
+        if (imageFile) {
+            const objectUrl = URL.createObjectURL(imageFile);
+            setPreviewUrl(objectUrl);
+
+        } else {
+            setPreviewUrl(editImage);
+            console
+        }
+    }, [imageFile, editImage]);
 
     return (
-
         <div className='min-h-screen bg-[#EEF7E8] pb-24'>
-
             <div
                 className='px-8 sm:px-10 lg:px-14 mb-16 pt-52 h-[70vh] text-white bg-cover bg-center flex justify-center'
                 style={{
@@ -78,43 +127,30 @@ const AddBlog = () => {
                         `url(${addbloghero})`
                 }}
             >
-
                 <div className='text-center'>
-
                     <h1 className='text-4xl sm:text-5xl font-bold'>
-
-
                         "Create New Blog"
-
-
                     </h1>
-
                     <p className='mt-4 text-gray-200 text-lg'>
-
                         Share your ideas with beautiful stories
-
                     </p>
-
                 </div>
-
             </div>
-
             <div className='grid grid-cols-1 lg:grid-cols-5 gap-5 px-8 sm:px-10 lg:px-14 items-start'>
 
                 <div className='col-span-3 hidden lg:block'>
 
                     <p className='text-xl font-semibold mb-4'>
-
                         Your Blogs
-
                     </p>
 
                     <BlogCard
                         data={data || []}
                         isLoading={isFetchingBlogs}
+                        isDeleteLoading={isDeleting}
                         isUser
-                    // onEdit={handleEdit}
-                    // onDelete={handleDelete}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
                     />
 
                 </div>
@@ -130,10 +166,10 @@ const AddBlog = () => {
                             onClick={() => fileInputRef.current.click()}
                             className='h-[200px] rounded-[30px] overflow-hidden bg-[#F6FAF2] cursor-pointer '>
 
-                            {imageFile ? (
+                            {previewUrl ? (
                                 <div className='relative h-full w-full'>
                                     <img
-                                        src={URL.createObjectURL(imageFile)}
+                                        src={previewUrl}
                                         alt=""
                                         className='h-full w-full object-cover object-center'
                                     />
@@ -162,10 +198,11 @@ const AddBlog = () => {
                             accept='image/*'
                             hidden
                             ref={fileInputRef}
-                            onChange={(e) =>
+                            onChange={(e) => {
                                 setImageFile(
                                     e.target.files[0]
-                                )
+                                );
+                            }
                             }
                         // className='w-full rounded-full border-2 border-lime-100 px-7 py-3 outline-none focus:border-lime-500'
                         />
@@ -174,11 +211,11 @@ const AddBlog = () => {
                             type='text'
                             value={title}
                             placeholder='Enter blog title'
-                            onChange={(e) =>
+                            onChange={(e) => {
                                 setTitle(
                                     e.target.value
-                                )
-                            }
+                                ); setErrorMessage(null)
+                            }}
                             className='w-full rounded-full border-2 border-lime-100 px-7 py-3 outline-none focus:border-lime-500'
                         />
 
@@ -186,45 +223,40 @@ const AddBlog = () => {
                             rows={5}
                             value={description}
                             placeholder='Write your story...'
-                            onChange={(e) =>
+                            onChange={(e) => {
                                 setDescription(
                                     e.target.value
-                                )
+                                ); setErrorMessage(null)
+                            }
                             }
                             className='w-full rounded-[30px] border-2 border-lime-100 px-7 py-5 outline-none resize-none focus:border-lime-500'
                         />
+                        {errorMessage &&
+                            <p className='text-sm text-red-500 ml-4'>{errorMessage}</p>}
 
                         <button
                             type='submit'
-                            // disabled={
-                            //     // isAddingBlog
-                            //     ||
-                            //     // isUpdatingBlog
-                            // }
+                            disabled={
+                                isAddingBlog
+                                ||
+                                isUpdatingBlog
+                            }
                             className='w-full bg-lime-600 hover:bg-lime-700 text-white py-3 rounded-full cursor-pointer'
                         >
-
-                            {
-                                editingBlog
-                                    ?
-
-                                    (
-                                        isUpdatingBlog
-                                            ?
-                                            "Updating..."
-                                            :
-                                            "Update Blog"
-                                    )
-
-                                    :
-
-                                    (
-                                        isAddingBlog
-                                            ?
-                                            "Publishing..."
-                                            :
-                                            "Publish Blog"
-                                    )
+                            {editingId ?
+                                (
+                                    isUpdatingBlog
+                                        ?
+                                        "Updating..."
+                                        :
+                                        "Update Blog"
+                                ) : (
+                                    isAddingBlog
+                                        ?
+                                        "Publishing..."
+                                        :
+                                        "Publish Blog"
+                                )
 
                             }
 
@@ -240,8 +272,8 @@ const AddBlog = () => {
                         data={data || []}
                         isLoading={isFetchingBlogs}
                         isUser
-                    // onEdit={handleEdit}
-                    // onDelete={handleDelete}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
                     />
 
                 </div>

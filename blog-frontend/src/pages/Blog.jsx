@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import bloghero from '../assets/blog-hero-image-768x361.webp'
 import BlogCard from '../componants/BlogCard';
 import Pagination from '../componants/Pagination';
-import {   useGetBlogQuery } from '../redux/services/blogapi.js';
+import { useGetBlogQuery } from '../redux/services/blogapi.js';
 
 
 
@@ -10,16 +10,16 @@ import {   useGetBlogQuery } from '../redux/services/blogapi.js';
 const Blog = () => {
     const [page, setPage] = useState(1);
 
-        const {
+    const {
         data,
-        isLoading ,
+        isLoading,
         isError,
         error
-    } = useGetBlogQuery();  
+    } = useGetBlogQuery();
 
     const limit = 5;
 
- 
+
 
     return (
         <div>

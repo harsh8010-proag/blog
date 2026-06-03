@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-
 export const blogApi = createApi({
     reducerPath: 'blogApi',
     baseQuery: fetchBaseQuery({
@@ -33,8 +32,27 @@ export const blogApi = createApi({
                 body: data
             }),
             invalidatesTags: ['blog']
+        }),
+
+        updateblog: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/update/${id}`,
+                method: 'PUT',
+                body: data
+            }),
+            invalidatesTags: ['blog']
+        }),
+
+        deleteBlog: builder.mutation({
+            query: (id) => ({
+                url: `/delete/${id}`,
+                method: 'DELETE'
+            }),
+
+            invalidatesTags: ['blog']
         })
+
     })
 })
 
-export const { useAddBlogMutation, useGetBlogQuery, useGetBlogByIdQuery, useGetUserBlogQuery } = blogApi;
+export const { useAddBlogMutation, useGetBlogQuery, useGetBlogByIdQuery, useGetUserBlogQuery, useUpdateblogMutation, useDeleteBlogMutation } = blogApi;

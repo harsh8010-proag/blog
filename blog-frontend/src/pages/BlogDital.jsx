@@ -9,7 +9,6 @@ const BlogDital = () => {
     let { data: blog, isLoading, error } = useGetBlogByIdQuery(id);
     const navigate = useNavigate();
 
-    console.log(blog)
     if (isLoading) {
         return <Spinner />
     }
@@ -19,13 +18,12 @@ const BlogDital = () => {
 
                 style={{ backgroundImage: ` url(https://images.unsplash.com/photo-1638342863994-ae4eee256688?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmxvZ3MlMjBub3QlMjBmb3VuZHxlbnwwfHwwfHx8MA%3D%3D)` }}>
                 <div className='absolute inset-0 bg-black/80'></div>
-                <h2 className='lg:text-6xl sm:text-5xl text-4xl text-center font-bold leading-tight relative z-10'> BLOG NOT FOUND</h2>
+                <h2 className='lg:  text-6xl sm:text-5xl text-4xl text-center font-bold leading-tight relative z-10'> BLOG NOT FOUND</h2>
 
 
             </div>
         </>)
     }
-
     return (
         <div>
             <div className="bg-cover bg-center min-h-screen text-white text-center pt-48   lg:pt-65  px-8 sm:px-10  lg:px-52 "

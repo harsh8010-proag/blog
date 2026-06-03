@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
+import { blogApi } from "./blogapi.js";
 
 export const api = createApi({
     reducerPath: 'api',
@@ -14,11 +14,11 @@ export const api = createApi({
     endpoints: (builder) => ({
 
         getProfile: builder.query({
-            query: () => `/profile`
+            query: () => `/profile`,
         }),
 
         logout: builder.query({
-            query: () => `/logout`
+            query: () => `/logout`,
         }),
 
         register: builder.mutation({
@@ -27,16 +27,22 @@ export const api = createApi({
                 method: 'POST',
                 body: data
             }),
-            invalidatesTags: ['Users']
         }),
-
 
         login: builder.mutation({
             query: (data) => ({
                 url: '/login',
                 method: 'POST',
                 body: data
-            })
+            }),
+            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(blogApi.util.invalidateTags(['blog']));
+                } catch (err) {
+                    console.log(err);
+                }
+            }
         }),
 
     })
