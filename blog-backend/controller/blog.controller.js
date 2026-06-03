@@ -13,15 +13,13 @@ export const createBlog = async (req, res) => {
             })
         }
         if (!req.file) {
-
             return res.status(400).json({
                 message: 'Image required'
             })
         }
-        console.log(req.file)
+
         const uploadResult = await uploadCloudinary(req.file.path);
-        console.log(req.user._id);
-        console.log(uploadResult.secure_url)
+
         const blog = await blogModel.create({
             user: req.user._id,
             title,
@@ -47,13 +45,11 @@ export const createBlog = async (req, res) => {
 
 
 export const getBlogs = async (req, res) => {
-
     try {
         const blogs = await blogModel.find().populate("user");
         if (!blogs) {
             res.status(404).json({ message: 'blog not found' });
         }
-
         res.status(200).json({
             blogs
         })
@@ -63,12 +59,10 @@ export const getBlogs = async (req, res) => {
             err: err.message
         })
     }
-
 }
 
 export const ditailblog = async (req, res) => {
     const { id } = req.params;
-
     try {
         const blog = await blogModel.findOne({ _id: id }).populate('user');
 
@@ -77,7 +71,6 @@ export const ditailblog = async (req, res) => {
                 message: "Blog not found"
             })
         }
-
 
         res.status(200).json(blog);
     } catch (err) {
@@ -88,8 +81,6 @@ export const ditailblog = async (req, res) => {
 }
 
 export const userBlog = async (req, res) => {
-
-
 
     try {
         const userBlog = await blogModel.find({ user: req.user._id }).populate('user')
@@ -103,6 +94,58 @@ export const userBlog = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             message: `internal server error ${err.message}`
+        })
+    }
+}
+
+export const updateblog = async (req, res) => {
+
+    const { id } = req.params;
+    const { title, description, postImageUrl } = req.body;
+    try {
+        const blog = await blogModel.findById(id);
+        blog.title = title;
+        blog.description = description;
+        if (req.file) {
+            const uplodePath = await uploadCloudinary(req.file.path);
+            blog.postImage = uplodePath.secure_url;
+            await blog.save();
+            return res.status(200).json({
+                message: 'data updated succesfully',
+                blog
+            })
+        }
+        blog.postImage = postImageUrl
+        await blog.save();
+        res.send(200).json({
+            message: 'data updated succesfully',
+            blog
+        })
+    } catch (err) {
+        res.status(500).json({
+            message: 'server error',
+            error: err.message
+        });
+    }
+}
+
+export const deleteBlog = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const deleteBlog = await blogModel.findByIdAndDelete(id);
+        if (!deleteBlog) {
+            return res.status(404).json({
+                message: 'blog not found'
+            })
+        }
+        res.status(200).json({
+            message: 'note deleted succesfully'
+        })
+
+    } catch (err) {
+        res.status(500).json({
+            message: 'server error',
+            error: err.message
         })
     }
 }

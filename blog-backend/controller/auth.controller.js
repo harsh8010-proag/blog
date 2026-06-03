@@ -5,6 +5,7 @@ export const registerUser = async (req, res) => {
 
     const { name, email, password } = req.body;
 
+
     if (!name.trim() || !password.trim() || !email.trim()) {
         return res.status(400).json({
             message: "All fields are required"
