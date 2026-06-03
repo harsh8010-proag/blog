@@ -24,6 +24,21 @@ const BlogCard = ({ data, isLoading, isUser, onEdit, onDelete, isDeleteLoading }
         return (<Spinner />)
     }
 
+    if (!data || data.length === 0) {
+        return (
+            <div className="mt-16 flex justify-center items-center">
+                <div className="text-center">
+                    <i className="ri-article-line text-6xl text-gray-400"></i>
+                    <h2 className="text-2xl font-semibold text-gray-700 mt-4">
+                        No Blogs Found
+                    </h2>
+                    <p className="text-gray-500 mt-2">
+                        You haven't created any blogs yet.
+                    </p>
+                </div>
+            </div>
+        );
+    }
     return (
         <div>
             <div className='grid grid-cols-1 lg:grid-cols-4 gap-12 mt-16 '>
