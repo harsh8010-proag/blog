@@ -8,7 +8,7 @@ import contactRoute from './routes/contact.routes.js'
 import blogRouter from './routes/blog.routes.js'
 dotenv.config();
 const app = express();
-
+console.log("CLOUD_NAME:", process.env.CLOUD_NAME);
 
 
 app.use(express.json());
